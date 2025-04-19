@@ -26,3 +26,9 @@ for index, (id, doc) in enumerate(vector_store.store.items()):
         print(f"{id}: {doc['text']}")
     else:
         break
+
+query = 'sun and rain' # or use like 'coco' if you want to return doc1
+docs = vector_store.similarity_search(query, k=1)
+
+print(type(docs))
+print("Similar doc: ", docs[0].id, " : ", docs[0])

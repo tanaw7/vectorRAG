@@ -3,7 +3,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_core.documents import Document
 
 # Initialize with an embedding model
-vector_store = InMemoryVectorStore(embedding=OpenAIEmbeddings())
+vector_store = InMemoryVectorStore(embedding=OpenAIEmbeddings(model="text-embedding-3-large"))
 
 document_1 = Document(
     page_content="I had chocalate chip pancakes and scrambled eggs for breakfast this morning.",
@@ -27,8 +27,9 @@ for index, (id, doc) in enumerate(vector_store.store.items()):
     else:
         break
 
-query = 'sun and rain' # or use like 'coco' if you want to return doc1
-docs = vector_store.similarity_search(query, k=1)
+query = 'Yesterday I had omlette for breakfast with coffee' # or use like 'coco' if you want to return doc1
+doc, score = vector_store.similarity_search_with_score(query, k=1)[0]
 
-print(type(docs))
-print("Similar doc: ", docs[0].id, " : ", docs[0])
+print("Your Query: ", query)
+print("Result doc: ", doc.id, " : ", doc)
+print("Similarity Score: ", f"score = {score:.4f}")

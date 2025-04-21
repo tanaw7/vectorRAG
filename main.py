@@ -37,4 +37,9 @@ for index, item in enumerate(queries):
     print("Result doc: ", doc.id, " : ", doc)
     print(f"Correct expected result?: ({doc.id} == {res}) {res==doc.id}")
     print("Similarity Score: ", f"score = {score:.4f}")
+
+    docScores = vector_store.similarity_search_with_score(q, k=2)
+    doc1, score1 = docScores[0]
+    doc2, score2 = docScores[1]
+    print(f"simi: {doc1.id, score1} and simi: {doc2.id, score2}")
     print("-----------------------------------")

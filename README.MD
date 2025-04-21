@@ -9,7 +9,8 @@
 - **InMemoryVectorStore Setup**: Initialize with `OpenAIEmbeddings` for fast local testing.  
 - **Document Ingestion**: Add multiple documents with custom IDs and metadata.  
 - **Document Inspection**: List and preview stored vectors and their source texts.  
-- **Similarity Search**: Query against the vector store and retrieve the most relevant documents along with their similarity scores.
+- **Similarity Search**: Run single or multiple queries against the vector store and retrieve top hits with similarity scores.  
+- **Automated Testing**: Validate returned document IDs against an expected-results list (`queries_list.py`).
 
 ---
 
@@ -40,38 +41,43 @@
    ```bash
    pip install -r requirements.txt
    ```
-
-4. **Configure your API key**
-   - Create a `.env` file at the project root:
-     ```env
-     OPENAI_API_KEY=your_api_key_here
-     ```
-   - Or export directly:
-     ```bash
-     export OPENAI_API_KEY="your_api_key_here"
-     ```
-
 ---
 
 ## ⚙️ Usage
 
-1. **Open and review `main.py`**
-   - Two sample `Document` instances are created (breakfast and weather examples).  
-   - An `InMemoryVectorStore` is initialized with `OpenAIEmbeddings(model="text-embedding-3-large")`.  
-   - Documents are added via `vector_store.add_documents(...)`.  
-   - The script lists up to 10 stored entries and performs a similarity search with score output.
+1. **Inspect the code files**
+   - `main.py`: Contains the sandbox logic:
+     - Initializes an `InMemoryVectorStore` with `OpenAIEmbeddings(model="text-embedding-3-large")`.
 
-2. **Run the example**
+   - `queries_list.py`: Exports a `queries` list of objects with fields:
+     ```python
+     queries = [
+         {"query": "coco", "expected_result": "doc1"},
+         {"query": "rainy days", "expected_result": "doc2"},
+         # ... more test cases ...
+     ]
+     ```
+
+2. **Run the sandbox**
    ```bash
    python main.py
    ```
-   **Expected output**:
+   **Sample output**:
    ```text
    doc1: I had chocolate chip pancakes and scrambled eggs for breakfast this morning.
    doc2: The weather forecast for tomorrow is cloudy and overcast, with a high of 62 degrees.
-   Your Query:  Yesterday I had omlette for breakfast with coffee
+
+   Your Query 1: coco
    Result doc:  doc1  :  <Document id="doc1">
-   Similarity Score:  score = 0.5597
+   Correct expected result?: (doc1 == doc1) True
+   Similarity Score:  score = 0.5777
+   -----------------------------------
+   Your Query 2: rainy days
+   Result doc:  doc2  :  <Document id="doc2">
+   Correct expected result?: (doc2 == doc2) True
+   Similarity Score:  score = 0.6565
+   -----------------------------------
+   # ...
    ```
 
 ---
@@ -79,8 +85,9 @@
 ## 🔧 Customization
 
 - **Add documents**: Extend `main.py` with more `Document` objects and unique IDs.  
-- **Change query**: Modify the `query` variable to test different search scenarios.  
-- **Adjust retrieval count**: Tweak `k` in `vector_store.similarity_search_with_score(query, k=...)`.
+- **Extend test cases**: Edit `queries_list.py` to add new queries with expected results.  
+- **Change model**: Swap the embedding model (e.g., `text-embedding-ada-002`) by updating the `OpenAIEmbeddings(model=...)` call.  
+- **Adjust retrieval count**: Modify `k` in `similarity_search_with_score(query, k=...)` for top‑K results.
 
 ---
 
@@ -88,7 +95,8 @@
 
 ```plaintext
 vectorRAG/
-├── main.py          # Example usage and test script
+├── main.py          # Example usage and test logic
+├── queries_list.py  # List of queries + expected results
 ├── requirements.txt # Project dependencies
 ├── README.md        # This documentation
 └── .env             # Environment variables (not committed)
@@ -101,6 +109,4 @@ vectorRAG/
 Distributed under the **MIT License**. Feel free to copy, modify, and distribute.
 
 ---
-
-*Polished for clarity, consistency, and ease of use.*
 
